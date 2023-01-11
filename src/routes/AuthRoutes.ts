@@ -1,5 +1,4 @@
-const express = require('express')
-
+const router = require('express').Router()
 const {
     loginUser,
     registerUser
@@ -12,3 +11,5 @@ router.post('/login', loginUser)
 
 
 module.exports = router
+
+export {}

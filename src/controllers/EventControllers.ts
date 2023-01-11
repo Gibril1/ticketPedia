@@ -1,12 +1,12 @@
 import { Response } from 'express'
 import { IGetUserAuthInfoRequest } from "../interfaces/AuthInterface"
 const asyncHandler = require('express-async-handler')
-const Events = require('../models/EventModel') 
+const Event = require('../models/EventModel') 
 import { IEvent } from '../models/EventModel'
 
 
 // @desc Create Events
-// @route /api/events/
+// @route POST /api/events/
 // @access Private: Organizer
 const createEvents = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
 
@@ -37,7 +37,7 @@ const createEvents = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Respons
     }
 
     // creating and committing into database
-    const events = await Events.create({
+    const event = await Event.create({
         name: name,
         description: description,
         location: location,
@@ -47,9 +47,15 @@ const createEvents = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Respons
         organizerId: req.user._id
     })
 
-    res.status(201).json(events)
+    res.status(201).json(event)
     
 })
+
+
+
+// @desc Get An Event
+// @route GET /api/event/:id
+// @access Private: Organizer
 const getEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
 
     // checking for authorization
@@ -59,7 +65,7 @@ const getEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) =
     }
 
     // checking if that event exists
-    const event = await Events.findById(req.params.id)
+    const event = await Event.findById(req.params.id)
 
     if(!event){
         res.status(404)
@@ -69,6 +75,11 @@ const getEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) =
     res.status(200).json(event)
 
 })
+
+
+// @desc Get All Event
+// @route GET /api/event/
+// @access Private: Organizer
 const getEvents = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
 
     // checking for authorization
@@ -78,7 +89,7 @@ const getEvents = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) 
     }
 
     // checking for the user's events
-    const events = await Events.find({ organizerId: req.user._id})
+    const events = await Event.find({ organizerId: req.user._id})
 
     if(events.length === 0){
         res.status(200).json('You have no events. Create One')
@@ -87,6 +98,11 @@ const getEvents = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) 
     res.status(200).json(events)
 
 })
+
+
+// @desc Update An Event
+// @route PUT /api/event/:id
+// @access Private: Organizer
 const updateEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
     // checking for authorization
     if(req.user.role !== 'organizer' && !req.user){
@@ -95,7 +111,7 @@ const updateEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response
     }
 
     // check if events exists
-    const event = await Events.findById(req.params.id)
+    const event = await Event.findById(req.params.id)
 
     if(!event){
         res.status(404)
@@ -108,12 +124,18 @@ const updateEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response
         throw new Error('You are not authorized to update this event')
     }
 
-    const updatedEvent = await Events.findByIdAndUpdate(req.params.id, req.body, { new: true})
+    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true})
 
     res.status(200).json(updatedEvent)
 
 
 })
+
+
+
+// @desc Delete An Event
+// @route DELETE /api/event/:id
+// @access Private: Organizer
 const deleteEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
 
     // checking for authorization
@@ -123,7 +145,7 @@ const deleteEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response
     }
 
     // check if event exists
-    const event = await Events.findById(req.params.id)
+    const event = await Event.findById(req.params.id)
 
     if(!event){
         res.status(404)
