@@ -4,8 +4,12 @@ import mongoose, { Schema, Types } from "mongoose";
 export interface IEvent {
     name: string,
     description: string,
+    location: string,
+    population: number,
     organizerId?: Types.ObjectId,
-    createdAt: Date
+    createdAt: Date,
+    date: Date,
+    timeDuration?: Date,
 }
 
 const EventSchema = new Schema<IEvent>({
@@ -17,6 +21,14 @@ const EventSchema = new Schema<IEvent>({
         type:String,
         required: true
     },
+    location:{
+        type:String,
+        required: true
+    },
+    population:{
+        type:Number,
+        required: true
+    },
     organizerId:{
         type: mongoose.Types.ObjectId,
         ref: 'User',
@@ -25,6 +37,13 @@ const EventSchema = new Schema<IEvent>({
     createdAt: {
         type: Date,
         default: Date.now()
+    },
+    date: {
+        type: Date,
+        required: true
+    },
+    timeDuration: {
+        type: Date,
     }
 })
 

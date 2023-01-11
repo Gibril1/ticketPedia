@@ -2,32 +2,48 @@ import { Response } from 'express'
 import { IGetUserAuthInfoRequest } from "../interfaces/AuthInterface"
 const asyncHandler = require('express-async-handler')
 const Events = require('../models/EventModel')
+import { IEvent } from '../models/EventModel'
 
 
 // @desc Create Events
 // @route /api/events/
 // @access Private: Organizer
 const createEvents = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
-    if(!req.user){
+
+    // checking for authorization
+    if(req.user.role !== 'organizer' && !req.user){
         res.status(400)
         throw new Error('You are not authorized')
     }
 
-    if(req.user.role !== 'organizer'){
-        res.status(400)
-        throw new Error('You are not authorized to create events')
-    }
+    // destructuring body data
+    const { name, 
+            description, 
+            location, 
+            population ,
+            date
+    } = req.body as IEvent
 
-    const { name, description } = req.body
 
-    if(!name || name === '' || !description || description === ''){
+    // checking to see if input fields is valid
+    if(
+        !name || name === '' || 
+        !description || description === '' || 
+        !location || location === '' || 
+        !population || !date
+        ){
         res.status(400)
         throw new Error('Invalid input fields')
     }
 
+    // creating and committing into database
     const events = await Events.create({
         name: name,
         description: description,
+        location: location,
+        population: population,
+        date: date,
+        timeDuration: req.body.timeDuration ? req.body.timeDuration : null,
         organizerId: req.user._id
     })
 
@@ -35,16 +51,14 @@ const createEvents = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Respons
     
 })
 const getEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
-    if(!req.user){
+
+    // checking for authorization
+    if(req.user.role !== 'organizer' && !req.user){
         res.status(400)
         throw new Error('You are not authorized')
     }
 
-    if(req.user.role !== 'organizer'){
-        res.status(400)
-        throw new Error('You are not authorized to create events')
-    }
-
+    // checking if that event exists
     const event = await Events.findById(req.params.id)
 
     if(!event){
@@ -56,16 +70,14 @@ const getEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) =
 
 })
 const getEvents = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
-    if(!req.user){
+
+    // checking for authorization
+    if(req.user.role !== 'organizer' && !req.user){
         res.status(400)
         throw new Error('You are not authorized')
     }
 
-    if(req.user.role !== 'organizer'){
-        res.status(400)
-        throw new Error('You are not authorized to create events')
-    }
-
+    // checking for the user's events
     const events = await Events.find({ organizerId: req.user._id})
 
     if(events.length === 0){
@@ -76,16 +88,13 @@ const getEvents = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) 
 
 })
 const updateEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
-    if(!req.user){
+    // checking for authorization
+    if(req.user.role !== 'organizer' && !req.user){
         res.status(400)
         throw new Error('You are not authorized')
     }
 
-    if(req.user.role !== 'organizer'){
-        res.status(400)
-        throw new Error('You are not authorized to create events')
-    }
-
+    // check if events exists
     const event = await Events.findById(req.params.id)
 
     if(!event){
@@ -93,6 +102,7 @@ const updateEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response
         throw new Error(`Event with id ${req.params.id} does not exist`)
     }
 
+    // checking if the user is authorized 
     if(event.organizerId.toString() !== req.user._id){
         res.status(400)
         throw new Error('You are not authorized to update this event')
@@ -105,16 +115,14 @@ const updateEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response
 
 })
 const deleteEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
-    if(!req.user){
+
+    // checking for authorization
+    if(req.user.role !== 'organizer' && !req.user){
         res.status(400)
         throw new Error('You are not authorized')
     }
 
-    if(req.user.role !== 'organizer'){
-        res.status(400)
-        throw new Error('You are not authorized to create events')
-    }
-
+    // check if event exists
     const event = await Events.findById(req.params.id)
 
     if(!event){
