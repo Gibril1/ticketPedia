@@ -1,4 +1,4 @@
-const express = require('express')
+import express from 'express'
 require('dotenv').config()
 const port = process.env.PORT || 5000
 

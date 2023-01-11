@@ -4,7 +4,7 @@ interface IOrganizer {
     firstName: string,
     lastName: string,
     dob: Date,
-    userId: Types.ObjectId | undefined
+    userId?: Types.ObjectId 
 }
 
 const OrganizerSchema = new Schema<IOrganizer>({
