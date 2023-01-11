@@ -7,7 +7,8 @@ const app = express()
 
 
 // routes
-app.use('api/auth', require('./routes/AuthRoutes'))
+app.use('/api/auth', require('./routes/AuthRoutes'))
+app.use('/api/events', require('./routes/EventRoutes'))
 
 // Listen to server
 app.listen(port, () => {

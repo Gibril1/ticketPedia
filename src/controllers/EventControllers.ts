@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import { IGetUserAuthInfoRequest } from "../interfaces/AuthInterface"
 const asyncHandler = require('express-async-handler')
-const Events = require('../models/EventModel')
+const Events = require('../models/EventModel') 
 import { IEvent } from '../models/EventModel'
 
 

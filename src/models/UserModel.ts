@@ -20,7 +20,8 @@ const UserSchema = new Schema<IUser>({
     },
     role:{
         type: String,
-        required: true
+        required: true,
+        enums: ['organizer', 'attendee']
     },
 })
 
