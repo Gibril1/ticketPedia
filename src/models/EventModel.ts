@@ -2,6 +2,7 @@ import mongoose, { Schema, Types } from "mongoose";
 
 
 export interface IEvent {
+    _id?: Types.ObjectId,
     name: string,
     description: string,
     location: string,

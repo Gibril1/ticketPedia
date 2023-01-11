@@ -1,8 +1,9 @@
 import mongoose, { Schema, Types } from  "mongoose"
 
 export interface ITicket {
+    _id?: Types.ObjectId,
     eventId?: Types.ObjectId,
-    userId?: Types.ObjectId,
+    organizerId?: Types.ObjectId,
     price: number,
     category: string,
     totalTickets: number,
@@ -16,7 +17,7 @@ const TicketSchema = new Schema<ITicket>({
         ref: 'Event',
         required: true
     },
-    userId: {
+    organizerId: {
         type: mongoose.Types.ObjectId,
         ref: 'User',
         required: true
@@ -40,3 +41,5 @@ const TicketSchema = new Schema<ITicket>({
 })
 
 module.exports = mongoose.model<ITicket>('Tickets', TicketSchema)
+
+export {}
