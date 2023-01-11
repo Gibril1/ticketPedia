@@ -59,6 +59,7 @@ const buyTicket = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) 
     }
 
     if(payment && paymentMade){
+        await ticket.updateOne({ availableTickets: ticket.availableTickets},{ $set: { availableTickets: ticket.availableTickets-=1 } })
         res.status(200).json('Check your email. You have made payment')
     }
 
