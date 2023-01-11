@@ -22,6 +22,7 @@ app.use(errorHandler)
 app.use('/api/auth', require('./routes/AuthRoutes'))
 app.use('/api/events', require('./routes/EventRoutes'))
 app.use('/api/tickets', require('./routes/TicketRoutes'))
+app.use('/api/user', require('./routes/UserRoutes'))
 
 // Listen to server
 app.listen(port, () => {
