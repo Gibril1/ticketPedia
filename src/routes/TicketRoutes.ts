@@ -15,7 +15,7 @@ router.route('/:id')
             .put(protect, updateTicket)
             .delete(protect, deleteTicket)
 
-router.get('/ticket/:id', protect, getTicket)
+router.get('/single/:id', protect, getTicket)
 
 module.exports = router
 

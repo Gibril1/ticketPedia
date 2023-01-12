@@ -2,6 +2,7 @@ import { Module } from "module"
 import mongoose, { Schema, Types } from  "mongoose"
 
 export interface IPayment {
+    _id?: Types.ObjectId,
     ticketId?: Types.ObjectId,
     userId?: Types.ObjectId,
     eventId?: Types.ObjectId,

@@ -1,11 +1,20 @@
 import { Response } from "express"
-import { IGetUserAuthInfoRequest } from "../interfaces/AuthInterface"
+import { IGetUserAuthInfoRequest, IAmount } from "../interfaces/AuthInterface"
+import { IPayment } from "../models/PaymentModel"
+import { ITicket } from "../models/TicketsModel"
 const asyncHandler = require('express-async-handler')
 const Ticket = require('../models/TicketsModel')
 const Event = require('../models/EventModel')
 const Payment = require('../models/PaymentModel')
 const UserTickets = require('../models/UserTicketsModel')
+const { IPayment } = require('../models/PaymentModel')
 
+
+
+
+// @desc Buy A Tickets
+// @routes POST /api/user/buy/:id
+// @access Private: User
 const buyTicket = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
     if(!req.user){
         res.status(400)
@@ -14,6 +23,9 @@ const buyTicket = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) 
 
     // check if the ticket exist
     const ticket = await Ticket.findById(req.params.id)
+
+    // destructuring from tickets
+    const { price, availableTickets } = ticket as ITicket
 
     if(!ticket){
         res.status(404)
@@ -29,25 +41,29 @@ const buyTicket = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) 
     }
 
     // check if ticket is sold out
-    if(ticket.availableTickets === 0){
+    if(availableTickets === 0){
         res.status(200).json('These ticket is sold out')
     }
 
     // getting the amount
-    const { amount } = req.body 
-
+    const { amount } = req.body as IAmount
+    
     // checking if the exact amount has been paid
-    if(!amount && amount !== ticket.price){
+    if(!amount){
         res.status(400)
         throw new Error('Kindly make sure you have paid the right amount')
     }
+    
+    if(amount !== price){
+        res.status(400).json('Please pay the right amunt')
+    }
 
-    const payment = await Payment.create({
+    const payment:IPayment = await Payment.create({
         ticketId: ticket._id,
         userId: req.user._id,
         eventId: event._id,
         amount: amount
-    })
+    }) 
 
     let paymentMade
     // buy the tickets

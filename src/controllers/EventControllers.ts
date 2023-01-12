@@ -11,7 +11,12 @@ import { IEvent } from '../models/EventModel'
 const createEvents = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
 
     // checking for authorization
-    if(req.user.role !== 'organizer' && !req.user){
+    if(!req.user){
+        res.status(400)
+        throw new Error('Not authorized')
+    }
+
+    if(req.user.role !== 'organizer'){
         res.status(400)
         throw new Error('You are not authorized')
     }
@@ -59,7 +64,12 @@ const createEvents = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Respons
 const getEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
 
     // checking for authorization
-    if(req.user.role !== 'organizer' && !req.user){
+    if(!req.user){
+        res.status(400)
+        throw new Error('Not authorized')
+    }
+    
+    if(req.user.role !== 'organizer'){
         res.status(400)
         throw new Error('You are not authorized')
     }
@@ -83,7 +93,12 @@ const getEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) =
 const getEvents = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
 
     // checking for authorization
-    if(req.user.role !== 'organizer' && !req.user){
+    if(!req.user){
+        res.status(400)
+        throw new Error('Not authorized')
+    }
+    
+    if(req.user.role !== 'organizer'){
         res.status(400)
         throw new Error('You are not authorized')
     }
@@ -105,7 +120,12 @@ const getEvents = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) 
 // @access Private: Organizer
 const updateEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
     // checking for authorization
-    if(req.user.role !== 'organizer' && !req.user){
+    if(!req.user){
+        res.status(400)
+        throw new Error('Not authorized')
+    }
+    
+    if(req.user.role !== 'organizer'){
         res.status(400)
         throw new Error('You are not authorized')
     }
@@ -118,8 +138,11 @@ const updateEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response
         throw new Error(`Event with id ${req.params.id} does not exist`)
     }
 
+    console.log(event.organizerId)
+    console.log(req.user._id)
+
     // checking if the user is authorized 
-    if(event.organizerId.toString() !== req.user._id){
+    if(event.organizerId.toString() !== req.user._id?.toString()){
         res.status(400)
         throw new Error('You are not authorized to update this event')
     }
@@ -139,22 +162,27 @@ const updateEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response
 const deleteEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
 
     // checking for authorization
-    if(req.user.role !== 'organizer' && !req.user){
+    if(!req.user){
+        res.status(400)
+        throw new Error('Not authorized')
+    }
+    
+    if(req.user.role !== 'organizer'){
         res.status(400)
         throw new Error('You are not authorized')
     }
 
     // check if event exists
-    const event = await Event.findById(req.params.id)
+    const event = await Event.findById(req.params.id) 
 
     if(!event){
         res.status(404)
         throw new Error(`Event with id ${req.params.id} does not exist`)
     }
 
-    if(event.organizerId.toString() !== req.user._id){
+    if(event.organizerId.toString() !== req.user._id?.toString()){
         res.status(400)
-        throw new Error('You are not authorized to update this event')
+        throw new Error('You are not authorized to delete this event')
     }
 
     await event.remove()

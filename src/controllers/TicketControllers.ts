@@ -11,7 +11,13 @@ import { IEvent } from '../models/EventModel'
 // @routes POST /api/tickets/:id
 // @access Private: Organizer
 const createTickets = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
-    if(req.user.role !== 'organizer' && !req.user){
+    // checking for authorization
+    if(!req.user){
+        res.status(400)
+        throw new Error('Not authorized')
+    }
+    
+    if(req.user.role !== 'organizer'){
         res.status(400)
         throw new Error('You are not authorized')
     }
@@ -22,6 +28,12 @@ const createTickets = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Respon
     if(!event){
         res.status(404)
         throw new Error(`Event with id of ${req.params.id} does not exist`)
+    }
+
+    // check if the event organizer is the one creating tickets
+    if(event.organizerId.toString() !== req.user._id?.toString()){
+        res.status(400)
+        throw new Error('You are not authorized to create tickets for this event')
     }
 
     // destructuring the request body
@@ -35,7 +47,7 @@ const createTickets = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Respon
     }
 
     const ticket = await Ticket.create({
-        eventId: event._id.toString(),
+        eventId: event._id,
         organizerId: req.user._id,
         price: price,
         category: category,
@@ -91,7 +103,13 @@ const getTicket = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) 
     res.status(200).json(ticket)
 })
 const updateTicket = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
-    if(req.user.role !== 'organizer' && !req.user){
+    // checking for authorization
+    if(!req.user){
+        res.status(400)
+        throw new Error('Not authorized')
+    }
+    
+    if(req.user.role !== 'organizer'){
         res.status(400)
         throw new Error('You are not authorized')
     }
@@ -105,19 +123,25 @@ const updateTicket = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Respons
     }
 
     // checking authorization
-    if(ticket.organizerId.toString() !== req.user._id){
+    if(ticket.organizerId.toString() !== req.user._id?.toString()){
         res.status(400)
         throw new Error('You are not authorized to update this event')
     }
 
-    const updatedTicket:ITicket = await Ticket.findByIdAndUpdate(req.params.id, req.body, { new: true})
+    const updatedTicket = await Ticket.findByIdAndUpdate(req.params.id, req.body, { new: true})
 
     res.status(200).json(updatedTicket)
 
 
 })
 const deleteTicket = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) => {
-    if(req.user.role !== 'organizer' && !req.user){
+    // checking for authorization
+    if(!req.user){
+        res.status(400)
+        throw new Error('Not authorized')
+    }
+    
+    if(req.user.role !== 'organizer'){
         res.status(400)
         throw new Error('You are not authorized')
     }
