@@ -7,7 +7,7 @@ const Ticket = require('../models/TicketsModel')
 const Event = require('../models/EventModel')
 const Payment = require('../models/PaymentModel')
 const UserTickets = require('../models/UserTicketsModel')
-const { IPayment } = require('../models/PaymentModel')
+
 
 
 
