@@ -21,11 +21,15 @@ const OrganizerSchema = new Schema<IOrganizer>({
         required: true
     },
     userId:{
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     }
 })
 
 
-module.exports = mongoose.model<IOrganizer>('Organizer', OrganizerSchema)
+const Organizer = mongoose.model<IOrganizer>('Organizer', OrganizerSchema)
+
+export {
+    Organizer
+}

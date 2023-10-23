@@ -1,4 +1,3 @@
-import { Module } from "module"
 import mongoose, { Schema, Types } from  "mongoose"
 
 export interface IPayment {
@@ -11,17 +10,17 @@ export interface IPayment {
 
 const PaymentSchema = new Schema<IPayment>({
     ticketId: {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Tickets',
         required: true
     },
     userId: {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
     eventId: {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Event',
         required: true
     },
@@ -31,4 +30,8 @@ const PaymentSchema = new Schema<IPayment>({
     }
 })
 
-module.exports = mongoose.model<IPayment>('Payment', PaymentSchema)
+const Payment = mongoose.model<IPayment>('Payment', PaymentSchema)
+
+export {
+    Payment
+}

@@ -1,22 +1,25 @@
-const router = require("express").Router()
-const { protect } = require('../middleware/AuthMiddleware')
+import { Router } from 'express'
+const ticketRouter = Router()
+import { protect } from '../middleware/AuthMiddleware'
 
-const {
+import {
     createTickets,
     getTicket,
     getTickets,
     updateTicket,
     deleteTicket
-} = require('../controllers/TicketControllers')
+} from '../controllers/TicketControllers'
 
-router.route('/:id')
+ticketRouter.route('/:id')
             .post(protect, createTickets)
             .get(protect, getTickets)
             .put(protect, updateTicket)
             .delete(protect, deleteTicket)
 
-router.get('/single/:id', protect, getTicket)
+ticketRouter.get('/single/:id', protect, getTicket)
 
-module.exports = router
 
-export {}
+
+export {
+    ticketRouter
+}

@@ -7,15 +7,19 @@ export interface IUserTickets {
 
 const UserTicketsSchema = new Schema<IUserTickets>({
     userId: {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
     paymentId: {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Payment',
         required: true
     }
 })
 
-module.exports = mongoose.model<IUserTickets>('UserTickets', UserTicketsSchema)
+const UserTickets = mongoose.model<IUserTickets>('UserTickets', UserTicketsSchema)
+
+export {
+    UserTickets
+}

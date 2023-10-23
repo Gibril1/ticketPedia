@@ -1,9 +1,9 @@
-const express = require('express')
+import express from 'express'
 require('dotenv').config()
 const port = process.env.PORT || 5000
-const connectDB = require('./config/db')
-const { errorHandler } = require('./middleware/ErrorMiddleware')
-import 'colorts/lib/string';
+import { connectDB } from './config/db'
+import { errorHandler } from './middleware/ErrorMiddleware'
+import { authRouter, eventRouter, ticketRouter, userRouter } from './routes'
 
 
 // Init app
@@ -21,12 +21,12 @@ app.use(errorHandler)
 
 
 // routes
-app.use('/api/auth', require('./routes/AuthRoutes'))
-app.use('/api/events', require('./routes/EventRoutes'))
-app.use('/api/tickets', require('./routes/TicketRoutes'))
-app.use('/api/users', require('./routes/UserRoutes'))
+app.use('/api/auth', authRouter)
+app.use('/api/events', eventRouter)
+app.use('/api/tickets', ticketRouter)
+app.use('/api/users', userRouter)
 
 // Listen to server
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`.red.underline)
+    console.log(`Server running on port ${port}`)
 })

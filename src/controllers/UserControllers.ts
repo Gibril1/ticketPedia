@@ -1,12 +1,7 @@
 import { Response } from "express"
 import { IGetUserAuthInfoRequest, IAmount } from "../interfaces/AuthInterface"
-import { IPayment } from "../models/PaymentModel"
-import { ITicket } from "../models/TicketsModel"
-const asyncHandler = require('express-async-handler')
-const Ticket = require('../models/TicketsModel')
-const Event = require('../models/EventModel')
-const Payment = require('../models/PaymentModel')
-const UserTickets = require('../models/UserTicketsModel')
+import asyncHandler from 'express-async-handler'
+import { Ticket, Event, Payment, UserTickets, IPayment, ITicket } from '../models/index'
 
 
 
@@ -82,8 +77,6 @@ const buyTicket = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response) 
 })
 
 
-module.exports = {
+export {
     buyTicket
 }
-
-export {}

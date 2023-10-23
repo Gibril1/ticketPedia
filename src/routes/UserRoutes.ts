@@ -1,11 +1,14 @@
-const router = require('express').Router()
+import { Router } from "express"
+const userRouter = Router()
 
-const {
+import {
     buyTicket
-} = require('../controllers/UserControllers')
+} from '../controllers/UserControllers'
 
-const { protect } = require('../middleware/AuthMiddleware')
+import { protect } from '../middleware/AuthMiddleware'
 
-router.post('/buy/:id', protect, buyTicket)
+userRouter.post('/buy/:id', protect, buyTicket)
 
-module.exports = router
+export {
+    userRouter
+}

@@ -31,7 +31,7 @@ const EventSchema = new Schema<IEvent>({
         required: true
     },
     organizerId:{
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
@@ -49,6 +49,8 @@ const EventSchema = new Schema<IEvent>({
 })
 
 
-module.exports = mongoose.model<IEvent>('Event', EventSchema)
+const Event = mongoose.model<IEvent>('Event', EventSchema)
 
-export {}
+export {
+    Event
+}

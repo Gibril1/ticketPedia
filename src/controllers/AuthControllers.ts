@@ -1,10 +1,9 @@
 import { Request, Response } from 'express'
-const asyncHandler = require('express-async-handler')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const User = require('../models/UserModel')
-const Organizer = require('../models/OrganizerModel')
-const Attendees = require('../models/AttendeesModel')
+import asyncHandler from 'express-async-handler'
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs'
+import { User, Attendees, Organizer } from '../models/index'
+
 
 const registerUser = asyncHandler(async(req:Request, res:Response) => {
     try {
@@ -15,7 +14,7 @@ const registerUser = asyncHandler(async(req:Request, res:Response) => {
     
         const { email, password, role } = req.body
     
-        if(!email || email === '' || !password || password === '' || !role || role === ''){
+        if(!email || !password || !role ){
             res.status(404)
             throw new Error('Please enter all fields')
         }
@@ -77,10 +76,10 @@ const loginUser = asyncHandler(async(req:Request, res:Response) => {
         throw new Error(`No user with email ${email} exists`)
     }
 
-    if(user && bcrypt.compare(password, user.password)){
+    if(user && await bcrypt.compare(password, user.password)){
         res.status(200).json({
             id: user._id,
-            token: generateToken(user._id)
+            token: generateToken(user._id.toString())
         })
     }else{
         res.status(404)
@@ -96,10 +95,10 @@ const loginUser = asyncHandler(async(req:Request, res:Response) => {
 
 
 const generateToken = ( id:string ) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d'})
+    return jwt.sign({ id }, process.env.JWT_SECRET as string, { expiresIn: '30d'})
 }
 
-module.exports = {
+export {
     registerUser,
     loginUser
 }

@@ -31,4 +31,4 @@ const protect = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response, ne
     }
 })
 
-module.exports = { protect } 
+export { protect } 

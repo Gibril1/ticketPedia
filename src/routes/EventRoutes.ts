@@ -1,24 +1,27 @@
-const router = require('express').Router()
+import { Router } from 'express'
+const eventRouter = Router()
 
-const {
+import {
     createEvents,
     getEvent,
     getEvents,
     updateEvent,
     deleteEvent
-} = require('../controllers/EventControllers')
+}from '../controllers/EventControllers'
 
-const { protect } = require('../middleware/AuthMiddleware')
+import { protect } from '../middleware/AuthMiddleware'
 
-router.route('/')
+eventRouter.route('/')
         .post(protect, createEvents)
         .get(protect, getEvents)
 
-router.route('/:id')
+eventRouter.route('/:id')
         .get(protect, getEvent)
         .put(protect, updateEvent)
         .delete(protect, deleteEvent)
 
-module.exports = router
 
-export {}
+
+export {
+        eventRouter
+}

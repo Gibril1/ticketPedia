@@ -1,10 +1,7 @@
 import { Response } from 'express'
 import { IGetUserAuthInfoRequest } from '../interfaces/AuthInterface'
-const asyncHandler = require('express-async-handler')
-const Ticket = require('../models/TicketsModel')
-const Event = require('../models/EventModel')
-import { ITicket } from '../models/TicketsModel'
-import { IEvent } from '../models/EventModel'
+import asyncHandler from 'express-async-handler'
+import { Ticket, Event, ITicket, IEvent } from '../models/index'
 
 
 // @desc Create Ticket for an event
@@ -160,13 +157,13 @@ const deleteTicket = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Respons
         throw new Error('You are not authorized to update this event')
     }
 
-    await ticket.remove()
+    // await ticket.remove()
 
     res.status(204).json({ _id: req.params.id})
 
 })
 
-module.exports = {
+export {
     createTickets,
     getTicket,
     getTickets,
@@ -174,4 +171,4 @@ module.exports = {
     deleteTicket
 }
 
-export {}
+

@@ -1,6 +1,6 @@
 import mongoose, { Schema, Types }  from 'mongoose'
 
-interface IAttendees {
+export interface IAttendees {
     firstName: string,
     lastName: string,
     dob: Date,
@@ -21,11 +21,15 @@ const AttendeesSchema = new Schema<IAttendees>({
         required: true
     },
     userId:{
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     }
 })
 
 
-module.exports = mongoose.model<IAttendees>('Attendees', AttendeesSchema)
+const Attendees = mongoose.model<IAttendees>('Attendees', AttendeesSchema)
+
+export {
+    Attendees
+}

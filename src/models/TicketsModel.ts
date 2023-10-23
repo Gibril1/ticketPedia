@@ -13,12 +13,12 @@ export interface ITicket {
 
 const TicketSchema = new Schema<ITicket>({
     eventId: {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Event',
         required: true
     },
     organizerId: {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
@@ -40,6 +40,8 @@ const TicketSchema = new Schema<ITicket>({
     }
 })
 
-module.exports = mongoose.model<ITicket>('Tickets', TicketSchema)
+const Ticket = mongoose.model<ITicket>('Tickets', TicketSchema)
 
-export {}
+export {
+    Ticket
+}

@@ -1,8 +1,7 @@
 import { Response } from 'express'
 import { IGetUserAuthInfoRequest } from "../interfaces/AuthInterface"
-const asyncHandler = require('express-async-handler')
-const Event = require('../models/EventModel') 
-import { IEvent } from '../models/EventModel'
+import  asyncHandler from 'express-async-handler'
+import { Event, IEvent } from '../models/EventModel'
 
 
 // @desc Create Events
@@ -32,9 +31,9 @@ const createEvents = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Respons
 
     // checking to see if input fields is valid
     if(
-        !name || name === '' || 
-        !description || description === '' || 
-        !location || location === '' || 
+        !name || 
+        !description || 
+        !location || 
         !population || !date
         ){
         res.status(400)
@@ -185,13 +184,13 @@ const deleteEvent = asyncHandler(async(req:IGetUserAuthInfoRequest, res:Response
         throw new Error('You are not authorized to delete this event')
     }
 
-    await event.remove()
+    // await event.remove()
 
     res.status(204).json({ _id: req.params._id })
 
 })
 
-module.exports = {
+export {
     createEvents,
     getEvent,
     getEvents,
