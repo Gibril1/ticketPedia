@@ -18,7 +18,10 @@ const registerUser = asyncHandler(async(req:Request, res:Response) => {
             res.status(404)
             throw new Error('Please enter all fields')
         }
-    
+        if(role !== 'organizer' || role !== 'attendee'){
+            res.status(400)
+            throw new Error('Wrong role here')
+        }
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
     
